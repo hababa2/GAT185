@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class SpaceDirectionMovement : MonoBehaviour
 {
-    [SerializeField] Vector3 direction;
-    [SerializeField] float speed;
+        [SerializeField] private Vector3 direction;
+        [SerializeField] private float speed;
+        [SerializeField] private Space space = Space.Self;
 
-    void Update()
-    {
-        transform.Translate(direction * speed * Time.deltaTime);
-    }
+        void Update()
+        {
+                transform.Translate(direction * speed * Time.deltaTime, space);
+        }
 }

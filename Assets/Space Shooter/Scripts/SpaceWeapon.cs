@@ -4,24 +4,24 @@ using UnityEngine;
 
 public class SpaceWeapon : MonoBehaviour
 {
-    [SerializeField] GameObject projectilePrefab;
-    [SerializeField] Transform spawnTransform;
-    [SerializeField] float fireRate;
+        [SerializeField] GameObject projectilePrefab;
+        [SerializeField] Transform spawnTransform;
+        [SerializeField] float fireRate;
 
-    float fireTimer = 0;
+        float fireTimer = 0;
 
-    private void Update()
-    {
-        fireTimer -= Time.deltaTime;
-        if (Input.GetButtonDown("Fire1") || (Input.GetButton("Fire1") && fireTimer <= 0))
+        private void Update()
         {
-            fireTimer = fireRate;
-            Fire();
+                fireTimer -= Time.deltaTime;
+                if (Input.GetButton("Fire1") && fireTimer <= 0)
+                {
+                        fireTimer = fireRate;
+                        Fire();
+                }
         }
-    }
 
-    public void Fire()
-    {
-        Instantiate(projectilePrefab, spawnTransform.position, spawnTransform.rotation);
-    }
+        public void Fire()
+        {
+                Instantiate(projectilePrefab, spawnTransform.position, spawnTransform.rotation);
+        }
 }
