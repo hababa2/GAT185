@@ -75,6 +75,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 20, y: 1, z: 20}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-8036841640580905033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 365415712808860713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e0d4cd9ce5db974ea3d6da1a6853f34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timer: 12
 --- !u!114 &-7794634689125772167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87,7 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0140270ed58d5a846a06745c1ca41790, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathPrefab: {fileID: 5006294162008028756, guid: 494ed6a7abef16c4da1bd0873157a8e6, type: 3}
+  deathPrefab: {fileID: 5338379386912582702, guid: 573a51520d80bc54ca1d7b30264a7449, type: 3}
   destroyOnDeath: 1
   maxHealth: 60
   health: 0
