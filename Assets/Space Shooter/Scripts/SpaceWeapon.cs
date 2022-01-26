@@ -13,15 +13,14 @@ public class SpaceWeapon : MonoBehaviour
         private void Update()
         {
                 fireTimer -= Time.deltaTime;
-                if (Input.GetButton("Fire1") && fireTimer <= 0)
-                {
-                        fireTimer = fireRate;
-                        Fire();
-                }
         }
 
         public void Fire()
         {
-                Instantiate(projectilePrefab, spawnTransform.position, spawnTransform.rotation);
+                if (fireTimer <= 0)
+                {
+                        fireTimer = fireRate;
+                        Instantiate(projectilePrefab, spawnTransform.position, spawnTransform.rotation);
+                }
         }
 }
