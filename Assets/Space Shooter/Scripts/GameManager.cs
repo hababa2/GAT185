@@ -9,21 +9,30 @@ public class GameManager : Singleton<GameManager>
 	enum State
 	{
 		TITLE,
-		GAME
+		PLAYER_START,
+		GAME,
+		PLAYER_DEAD,
+		GAME_OVER
 	}
 
 	[SerializeField] GameObject playerPrefab;
 	[SerializeField] Transform playerSpawn;
+	[SerializeField] BoxSpawner enemySpawner;
 	[SerializeField] GameObject titleScreen;
+	[SerializeField] GameObject gameOverScreen;
 	[SerializeField] TMP_Text scoreUI;
 	[SerializeField] TMP_Text livesUI;
 	[SerializeField] Slider healthBar;
 	[SerializeField] Image healthBarFill;
 
-	public float playerHealth { set { 
+	public float playerHealth
+	{
+		set
+		{
 			healthBar.value = value;
 			healthBarFill.color = Color.Lerp(new Color(1.0f, 0.0f, 0.0f), new Color(0.0f, 1.0f, 0.0f), value / 100.0f);
-		} }
+		}
+	}
 
 	public delegate void GameEvent();
 
@@ -33,6 +42,8 @@ public class GameManager : Singleton<GameManager>
 	int score = 0;
 	int lives = 0;
 	State state = State.TITLE;
+	float stateTimer = 0.0f;
+	float gameTimer = 0.0f;
 
 	public int Score
 	{
@@ -54,17 +65,55 @@ public class GameManager : Singleton<GameManager>
 		}
 	}
 
+	private void Update()
+	{
+		stateTimer -= Time.deltaTime;
+
+		switch (state)
+		{
+			case State.TITLE:
+				break;
+			case State.PLAYER_START:
+				DestroyAllEnemies();
+				Instantiate(playerPrefab, playerSpawn.position, playerSpawn.rotation);
+				startGameEvent?.Invoke();
+				state = State.GAME;
+				break;
+			case State.GAME:
+				gameTimer += Time.deltaTime;
+				if(gameTimer > 5.0f)
+				{
+					gameTimer = 0.0f;
+					enemySpawner.timeModifier = Mathf.Max(0.2f, enemySpawner.timeModifier - 0.1f);
+				}
+				break;
+			case State.PLAYER_DEAD:
+				if (stateTimer <= 0.0f)
+				{
+					state = State.PLAYER_START;
+				}
+				break;
+			case State.GAME_OVER:
+				if(stateTimer <= 0.0f)
+				{
+					state = State.TITLE;
+					gameOverScreen.SetActive(false);
+					titleScreen.SetActive(true);
+				}
+				break;
+			default:
+				break;
+		}
+	}
+
 	public void OnStartGame()
 	{
-		state = State.GAME;
+		state = State.PLAYER_START;
 		titleScreen.SetActive(false);
 
 		Score = 0;
 		Lives = 3;
-
-		Instantiate(playerPrefab, playerSpawn.position, playerSpawn.rotation);
-
-		startGameEvent?.Invoke();
+		gameTimer = 0.0f;
 	}
 
 	public void OnStartTitle()
@@ -76,18 +125,32 @@ public class GameManager : Singleton<GameManager>
 
 	public void OnStopGame()
 	{
-
+		state = State.GAME_OVER;
+		gameOverScreen.SetActive(true);
+		stateTimer = 5.0f;
 	}
 
 	public void OnPlayerDead()
 	{
-		if(--Lives == 0)
+		if (--Lives == 0)
 		{
 			OnStopGame();
 		}
 		else
 		{
-			Instantiate(playerPrefab, playerSpawn.position, playerSpawn.rotation);
+			state = State.PLAYER_DEAD;
+			stateTimer = 3.0f;
+		}
+
+		stopGameEvent?.Invoke();
+	}
+
+	private void DestroyAllEnemies()
+	{
+		var spaceEnemies = FindObjectsOfType<SpaceEnemy>();
+		foreach (var spaceEnemy in spaceEnemies)
+		{
+			Destroy(spaceEnemy.gameObject);
 		}
 	}
 }

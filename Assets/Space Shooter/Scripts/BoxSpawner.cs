@@ -12,6 +12,7 @@ public class BoxSpawner : MonoBehaviour
 
         private BoxCollider boxCollider;
         private float timer;
+        public float timeModifier = 1;
 
         void Start()
         {
@@ -28,9 +29,9 @@ public class BoxSpawner : MonoBehaviour
 
                 timer -= Time.deltaTime;
 
-                if(timer <= 0)
+                if(timer <= 0 && timeModifier >= 0.2f)
 		{
-                        timer = Random.Range(minTime, maxTime);
+                        timer = Random.Range(minTime, maxTime) * timeModifier;
 
                         Instantiate(spawnPrefabs[Random.Range(0, spawnPrefabs.Length)], GetRandomPoint(), transform.rotation);
                 }
